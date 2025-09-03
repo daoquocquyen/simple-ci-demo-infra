@@ -1,0 +1,34 @@
+jenkins:
+  systemMessage: "Bootstrapped by JCasC"
+  numExecutors: 2
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "${ADMIN_USER}"
+          password: "${ADMIN_PASS}"
+
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+jobs:
+  - script: |
+      job('seed-job') {
+        steps {
+          dsl {
+            external('jobs.groovy')
+          }
+        }
+      }
+
+tool:
+  maven:
+    installations:
+      - name: "Maven 3.8.8"
+        home: "/opt/maven/apache-maven-3.8.8"
+  jdk:
+    installations:
+      - name: "JDK 17"
+        home: "/usr/lib/jvm/java-17-openjdk"

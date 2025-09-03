@@ -1,0 +1,9 @@
+workflow-aggregator
+git
+github
+credentials-binding
+configuration-as-code
+junit
+warnings-ng
+job-dsl
+workflow-job
