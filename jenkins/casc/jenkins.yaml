@@ -31,4 +31,4 @@ tool:
   jdk:
     installations:
       - name: "JDK 17"
-        home: "/usr/lib/jvm/java-17-openjdk"
+        home: "/opt/java/openjdk"
