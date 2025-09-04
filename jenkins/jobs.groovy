@@ -6,7 +6,7 @@ pipelineJob('simple-ci-demo-pipeline') {
                     remote {
                         url('https://github.com/daoquocquyen/simple-ci-demo.git')
                     }
-                    branches('**')
+                    branches('*/main')
                 }
             }
             scriptPath('Jenkinsfile')

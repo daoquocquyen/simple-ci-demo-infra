@@ -20,6 +20,9 @@ services:
       - ./jenkins/init.groovy.d:/var/jenkins_home/init.groovy.d:ro
       - ./jenkins/plugins.txt:/usr/share/jenkins/ref/plugins.txt:ro
       - ./jenkins/jobs.groovy:/tmp/jobs.groovy:ro
+      - ./dependency-check-data:/tmp/dependency-check-data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
 
 volumes:
   jenkins_home:
