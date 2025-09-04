@@ -7,3 +7,4 @@ junit
 warnings-ng
 job-dsl
 workflow-job
+startup-trigger-plugin

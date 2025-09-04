@@ -1,6 +1,6 @@
 jenkins:
   systemMessage: "Bootstrapped by JCasC"
-  numExecutors: 2
+  numExecutors: 1
 
   securityRealm:
     local:
@@ -13,12 +13,22 @@ jenkins:
     loggedInUsersCanDoAnything:
       allowAnonymousRead: false
 
+security:
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: false
+
 jobs:
   - script: |
       job('seed-job') {
+        scm {
+            git {
+              remote { url('https://github.com/daoquocquyen/simple-ci-demo-infra.git') }
+              branches('*/main')
+            }
+          }
         steps {
           dsl {
-            external('jobs.groovy')
+            external('jenkins/jobs.groovy')
           }
         }
       }

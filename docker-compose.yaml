@@ -17,8 +17,9 @@ services:
     volumes:
       - jenkins_home:/var/jenkins_home
       - ./jenkins/casc:/var/jenkins_home/casc:ro
+      - ./jenkins/init.groovy.d:/var/jenkins_home/init.groovy.d:ro
       - ./jenkins/plugins.txt:/usr/share/jenkins/ref/plugins.txt:ro
-      - ./jenkins/jobs.groovy:/var/jenkins_home/jobs/seed-job/workspace/jobs.groovy:ro
+      - ./jenkins/jobs.groovy:/tmp/jobs.groovy:ro
 
 volumes:
   jenkins_home:
