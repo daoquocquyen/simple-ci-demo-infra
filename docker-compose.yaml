@@ -11,9 +11,9 @@ services:
     environment:
       JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
       CASC_JENKINS_CONFIG: "/var/jenkins_home/casc/jenkins.yaml"
-      # pass secrets via env or Docker/K8s secrets in real use:
       ADMIN_USER: "admin"
       ADMIN_PASS: "change_me"
+      GITHUB_PAT: "${GITHUB_PAT}"
     volumes:
       - jenkins_home:/var/jenkins_home
       - ./jenkins/casc:/var/jenkins_home/casc:ro
