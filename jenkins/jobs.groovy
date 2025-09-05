@@ -7,8 +7,10 @@ multibranchPipelineJob('simple-ci-demo-pipeline') {
           id('gh-simple-ci-demo-mbp')
 
           credentialsId('github-creds')  // PAT or GitHub App credentials
+          repoOwner('daoquocquyen')
+          repository('simple-ci-demo')
           repositoryUrl('https://github.com/daoquocquyen/simple-ci-demo.git')
-          configuredByUrl('https://github.com/daoquocquyen/simple-ci-demo.git')
+          configuredByUrl(true)
 
           traits {
             // Discover all branches
