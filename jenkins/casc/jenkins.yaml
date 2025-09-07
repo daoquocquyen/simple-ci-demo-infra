@@ -1,0 +1,67 @@
+jenkins:
+  systemMessage: "Bootstrapped by JCasC"
+  numExecutors: 3
+
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "${ADMIN_USER}"
+          password: "${ADMIN_PASS}"
+
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+
+security:
+  globalJobDslSecurityConfiguration:
+    useScriptSecurity: false
+
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - usernamePassword:
+              scope: GLOBAL
+              id: "github-creds"
+              username: "dqquyen2003"
+              password: "${GITHUB_PAT}"
+              description: "GitHub PAT for multibranch pipeline"
+          - usernamePassword:
+              scope: GLOBAL
+              id: "nexus-creds"
+              username: "admin"
+              password: "admin123"
+              description: "Nexus credentials for artifact publishing"
+
+unclassified:
+  location:
+    url: "${PUBLIC_URL}"
+  gitHubConfiguration:
+    apiRateLimitChecker: ThrottleOnOver
+
+jobs:
+  - script: |
+      job('seed-job') {
+        scm {
+            git {
+              remote { url('https://github.com/daoquocquyen/simple-ci-demo-infra.git') }
+              branches('*/main')
+            }
+          }
+        steps {
+          dsl {
+            external('jenkins/jobs.groovy')
+          }
+        }
+      }
+
+tool:
+  maven:
+    installations:
+      - name: "Maven 3.8.8"
+        home: "/opt/maven/apache-maven-3.8.8"
+  jdk:
+    installations:
+      - name: "JDK 17"
+        home: "/opt/java/openjdk"

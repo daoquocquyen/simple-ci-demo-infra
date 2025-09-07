@@ -1,0 +1,62 @@
+services:
+  init-perms:
+    image: alpine:3.19
+    command: >
+      sh -c "chown -R ${HOST_UID:-1000}:${HOST_GID:-1000} /maven-repo /trivy-cache || true"
+    volumes:
+      - maven-repo:/maven-repo
+      - trivy-cache:/trivy-cache
+    user: "0:0"
+    environment:
+      - HOST_UID=${HOST_UID:-1000}
+      - HOST_GID=${HOST_GID:-1000}
+    # This container will exit after fixing permissions
+
+  jenkins:
+    build:
+      context: ./jenkins
+      dockerfile: Dockerfile
+    container_name: jenkins
+    depends_on:
+      - init-perms
+    ports:
+      - "8080:8080"
+    environment:
+      JAVA_OPTS: "-Djenkins.install.runSetupWizard=false"
+      CASC_JENKINS_CONFIG: "/var/jenkins_home/casc/jenkins.yaml"
+      ADMIN_USER: "admin"
+      ADMIN_PASS: "change_me"
+      GITHUB_PAT: "${GITHUB_PAT}"
+      PUBLIC_URL: "${PUBLIC_URL}"
+    volumes:
+      - jenkins-home:/var/jenkins_home
+      - ./jenkins/casc:/var/jenkins_home/casc:ro
+      - ./jenkins/init.groovy.d:/var/jenkins_home/init.groovy.d:ro
+      - ./jenkins/plugins.txt:/usr/share/jenkins/ref/plugins.txt:ro
+      - ./jenkins/jobs.groovy:/tmp/jobs.groovy:ro
+      - ./dependency-check-data:/tmp/dependency-check-data
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /etc/docker/daemon.json:/etc/docker/daemon.json:ro
+
+  nexus:
+    image: sonatype/nexus3:3.83.2-java17-alpine
+    container_name: nexus
+    depends_on:
+      - init-perms
+    ports:
+      - "8081:8081"
+      - "5000:5000"
+    volumes:
+      - nexus-data:/nexus-data
+
+volumes:
+  jenkins-home:
+    name: jenkins-home
+  nexus-data:
+    name: nexus-data
+  maven-repo:
+    name: maven-repo
+  trivy-cache:
+    name: trivy-cache
