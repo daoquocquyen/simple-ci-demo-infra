@@ -2,6 +2,19 @@
 
 This guide explains how to start the infrastructure for the Simple CI Demo project.
 
++---------+           (webhook / poll SCM)           +---------+            (upload images)           +---------+
+| GitHub  |  ------------------------------------->  | Jenkins |  --------------------------------->  | Nexus3  |
+|  Repo   |                                          |  CI/CD  |                                      |  Repo   |
++---------+                                          +---------+                                      +---------+
+      |                                                    |                                               |
+      |  source code                                       |  build/test/package image                     |  stores:
+      |                                                    |                                               |
+      |                                                    |                                               |
+      |                                                    |  publish (docker push)                        |  - Docker images
+      v                                                    v                                               v
+  branches/tags ----------------------------------> pipeline stages ---------------------------------> repositories
+
+
 ## 1. Start ngrok to Expose Jenkins
 
 ```sh
